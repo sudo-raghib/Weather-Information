@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="styles.css">
+    
+    
+</head>
+<body>
+    <!-- create a search box-->
+    <div class = "card">
+            <div class = "search"> 
+                <!-- add input box and search button--> 
+                <input type="text" placeholder="Enter City Name" spellcheck="false">
+                <!-- add button with icon--> 
+                <button> <img src="images/search.png" alt="search">
+
+                </button>
+            </div>
+            <!-- when wrong city name entered display error -->
+            <div class="error">
+                <p>Invalid City Name</p>
+            </div>
+            <div class="weather">
+                <img src="images/rain.png" alt="rain" class="weather-icon">
+                <!-- display tempearture--> 
+                <h1 class="temp">22°c</h1>
+                <!-- display city name--> 
+                <h2 class="city">Raipur</h2>
+
+                <div class="details">
+                    <!-- Create two columns-->
+                    <div class="col">
+                        <img src="images/humidity.png" alt="humidity">
+                        <div>
+                            <!-- Add text-->
+                            <p class="humidity">50%</p>
+                            <p>Humidity</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <img src="images/wind.png" alt="wind">
+                        <div>
+                            <!-- Add text-->
+                            <p class="wind">15 km/hr</p>
+                            <p>Wind Speed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <script>
+        /* api key removed from github see on local machine */
+        const apiKey = "" ; 
+        const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q="; 
+
+        /* when clicking on search button send city information in checkWeather function */
+        const searchBox = document.querySelector(".search input") ; 
+        const searchBtn = document.querySelector(".search button") ; 
+        const weatherIcon = document.querySelector(".weather-icon");
+
+            /*add city name through this function */
+        async function checkWeather(city){
+            const response = await fetch(apiUrl + city +  `&appid=${apiKey}`) ; 
+
+            /* Invalid City Name */ 
+            if(response.status == 404){
+                /*display error message and hide weather data*/ 
+                document.querySelector(".error").style.display="block";
+                document.querySelector(".weather").style.display="none";
+            }
+            /* Valid City Name */ 
+            else{
+                 /* data will have all information about weather from particular city*/
+            var data = await response.json() ; 
+
+                /* display data on webpage*/ 
+                /*console.log(data) ; */
+
+                /*Now, update temp,city,humidity,windspeed ininformation from the data coming from api*/ 
+                /* innerHTML will update the text written in elements */ 
+                document.querySelector(".city").innerHTML = data.name;
+                /* rounding the temp so that only integer temp is displayed*/
+                document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + "°c";
+                document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+                document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
+
+                /* updating the image according to weather condition*/  
+                /* data.weather[0].main gives weather condition*/
+                if(data.weather[0].main == "Clouds"){
+                    weatherIcon.src = "images/clouds.png" ; 
+                }
+                else if(data.weather[0].main == "Clear"){
+                    weatherIcon.src = "images/clear.png" ; 
+                }
+                else if(data.weather[0].main == "Rain"){
+                    weatherIcon.src = "images/rain.png" ; 
+                }
+                else if(data.weather[0].main == "Drizzle"){
+                    weatherIcon.src = "images/drizzle.png" ; 
+                }
+                else if(data.weather[0].main == "Mist"){
+                    weatherIcon.src = "images/mist.png" ; 
+                }
+                else if(data.weather[0].main == "Snow"){
+                    weatherIcon.src = "images/snow.png" ; 
+                }
+
+                document.querySelector(".weather").style.display = "block" ;
+                document.querySelector(".error").style.display="none"; /*hide error message when displaying weather data*/
+            }
+           
+
+        }
+
+    searchBtn.addEventListener("click" , ()=>{
+        /* city information in input -> to get information written in input field use .value*/
+        checkWeather(searchBox.value); /*call function so that information gets loaded everytime webpage loads */
+    })
+    
+    </script>
+</body>
+</html>
