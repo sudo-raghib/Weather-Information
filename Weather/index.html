@@ -5,20 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
     <link rel="stylesheet" href="styles.css">
-    
-    
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- create a search box-->
     <div class = "card">
-            <div class = "search"> 
+            <form class = "search" id="weather-form"> 
                 <!-- add input box and search button--> 
-                <input type="text" placeholder="Enter City Name" spellcheck="false">
-                <!-- add button with icon--> 
-                <button> <img src="images/search.png" alt="search">
-
+                <input type="text" autocomplete="on" placeholder="Enter City Name" spellcheck="false">
+                <!-- add button with icon-->
+                <button type="submit">
+                    <img src="images/search.png" alt="search">
                 </button>
-            </div>
+            </form>
             <!-- when wrong city name entered display error -->
             <div class="error">
                 <p>Invalid City Name</p>
@@ -54,7 +53,7 @@
 
     <script>
         /* api key removed from github see on local machine */
-        const apiKey = "" ; 
+        const apiKey = "d7d193956fa511c6036f4d8a651d99c3" ; 
         const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q="; 
 
         /* when clicking on search button send city information in checkWeather function */
@@ -115,12 +114,14 @@
            
 
         }
+        const form = document.getElementById("weather-form");
+        form.addEventListener("submit", onFormSubmit);
 
-    searchBtn.addEventListener("click" , ()=>{
-        /* city information in input -> to get information written in input field use .value*/
-        checkWeather(searchBox.value); /*call function so that information gets loaded everytime webpage loads */
-    })
-    
+        function onFormSubmit(event) {
+            event.preventDefault();
+            /* city information in input -> to get information written in input field use .value*/
+            checkWeather(searchBox.value); /*call function so that information gets loaded everytime webpage loads */
+        }
     </script>
 </body>
 </html>
